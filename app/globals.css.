@@ -1,0 +1,32 @@
+root {
+  --navy: #172554;
+  --violet: #8B5CF6;
+  --ink: #172033;
+  --muted: #667085;
+  --paper: #F7F8FC;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+.page { min-height: 100vh; display: flex; flex-direction: column; }
+.nav { width: min(1100px, calc(100% - 40px)); margin: 0 auto; height: 82px; display: flex; align-items: center; justify-content: space-between; }
+.brand { color: var(--navy); font-weight: 800; font-size: 22px; text-decoration: none; letter-spacing: -.8px; display: flex; align-items: center; gap: 10px; }
+.brandMark { display: grid; place-items: center; width: 34px; height: 34px; color: white; background: var(--violet); border-radius: 12px; }
+.navNote, footer { color: var(--muted); font-size: 13px; }
+.hero { width: min(1100px, calc(100% - 40px)); margin: auto; padding: 65px 0 90px; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 70px; }
+.eyebrow { color: var(--violet); font-size: 11px; font-weight: 800; letter-spacing: 1.4px; display: flex; align-items: center; gap: 9px; }
+.eyebrow span { width: 7px; height: 7px; border-radius: 50%; background: var(--violet); }
+h1 { color: var(--navy); font-size: clamp(48px, 6vw, 76px); line-height: .99; letter-spacing: -4px; margin: 25px 0; }
+h1 em { color: var(--violet); font-style: normal; }
+.intro { color: var(--muted); font-size: 17px; line-height: 1.7; max-width: 470px; }
+.authCard { background: white; border: 1px solid #E8EAF2; border-radius: 24px; padding: 32px; box-shadow: 0 18px 55px #17255412; }
+.authCard h2 { margin: 0 0 9px; color: var(--navy); font-size: 25px; }
+.authCard p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+label { display: block; font-size: 13px; font-weight: 700; margin: 23px 0 8px; }
+input { width: 100%; border: 1px solid #D9DDEA; border-radius: 12px; padding: 15px; font-size: 16px; outline-color: var(--violet); }
+button { width: 100%; margin-top: 13px; padding: 15px; border: 0; border-radius: 12px; background: var(--navy); color: white; font-size: 15px; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .65; }
+.message { padding: 12px; border-radius: 10px; background: #F1EDFF; color: var(--navy) !important; }
+small { display: block; margin-top: 18px; color: #98A0B3; font-size: 11px; line-height: 1.5; }
+footer { width: min(1100px, calc(100% - 40px)); margin: 0 auto; padding: 22px 0; border-top: 1px solid #E6E8F0; display: flex; justify-content: space-between; }
+@media (max-width: 760px) { .hero { grid-template-columns: 1fr; gap: 38px; padding: 45px 0 60px; } h1 { letter-spacing: -2.5px; } .authCard { padding: 25px; } .navNote { display: none; } }
