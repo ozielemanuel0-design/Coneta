@@ -1,0 +1,24 @@
+# Conecta — versão inicial
+
+Este pacote contém a estrutura inicial de uma aplicação web com Next.js e Supabase.
+
+## Importante
+Este projeto ainda não foi publicado nem testado no teu ambiente. O ZIP é o ponto de partida do código, não uma aplicação já funcional.
+
+## Configuração local
+1. Instalar Node.js numa máquina compatível.
+2. Executar `npm install`.
+3. Copiar `.env.example` para `.env.local`.
+4. Preencher `NEXT_PUBLIC_SUPABASE_URL` com o Project URL do Supabase.
+5. Preencher `NEXT_PUBLIC_SUPABASE_ANON_KEY` com a Publishable key.
+6. Executar `npm run dev`.
+
+A chave publicável pode ser usada no frontend com Row Level Security (RLS) corretamente configurado. Nunca colocar a Secret key no frontend.
+
+## Estado
+- Interface inicial responsiva.
+- Formulário de acesso por e-mail via link mágico.
+- Cliente Supabase preparado.
+- SQL inicial para a tabela `profiles`.
+
+A autenticação por telefone/SMS, feed, mensagens, comunidades, moderação e notificações ainda precisam de ser implementados.
