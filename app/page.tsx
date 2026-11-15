@@ -14,7 +14,12 @@ export default function Home() {
 
   useEffect(() => {
     async function checkSession() {
-      const { data } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) {
+        setMessage(error.message);
+      }
+
       setSession(data.session);
       setLoading(false);
     }
@@ -37,14 +42,14 @@ export default function Home() {
     setMessage("");
 
     const { error } = await supabase.auth.signInWithOtp({
-      email,
+      email: email.trim(),
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: "https://coneta-3axr.vercel.app",
       },
     });
 
     if (error) {
-      setMessage(error.message);
+      setMessage("Erro: " + error.message);
     } else {
       setMessage("Link enviado! Verifica o teu e-mail.");
     }
@@ -80,6 +85,7 @@ export default function Home() {
 
         <section className="hero">
           <div className="eyebrow">BEM-VINDO AO CONECTA</div>
+
           <h1>
             As tuas pessoas.
             <br />
@@ -139,6 +145,7 @@ export default function Home() {
 
           <form onSubmit={signUp}>
             <label htmlFor="email">O teu endereço de e-mail</label>
+
             <input
               id="email"
               type="email"
@@ -172,5 +179,6 @@ export default function Home() {
     </main>
   );
 }
+
 
 
