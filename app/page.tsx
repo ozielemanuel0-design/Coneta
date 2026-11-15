@@ -1,40 +1,107 @@
 
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    async function checkSession() {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+      setLoading(false);
+    }
+
+    checkSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   async function signUp(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    setLoading(true);
+    setSending(true);
     setMessage("");
 
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: window.location.origin,
-        },
-      });
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
 
-      if (error) {
-        setMessage(error.message);
-      } else {
-        setMessage(
-          "Enviámos um link de acesso para o teu e-mail. Verifica a caixa de entrada."
-        );
-      }
-    } catch {
-      setMessage("Não foi possível ligar ao Supabase. Verifica as configurações.");
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Link enviado! Verifica o teu e-mail.");
     }
 
-    setLoading(false);
+    setSending(false);
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    setSession(null);
+    setMessage("Terminaste a sessão.");
+  }
+
+  if (loading) {
+    return (
+      <main className="page">
+        <section className="hero">
+          <h2>A preparar o Conecta...</h2>
+        </section>
+      </main>
+    );
+  }
+
+  if (session) {
+    return (
+      <main className="page">
+        <nav className="nav">
+          <a className="brand" href="#">
+            <span className="brandMark">C</span> conecta
+          </a>
+          <button onClick={signOut}>Sair</button>
+        </nav>
+
+        <section className="hero">
+          <div className="eyebrow">BEM-VINDO AO CONECTA</div>
+          <h1>
+            As tuas pessoas.
+            <br />
+            <em>As tuas ideias.</em>
+          </h1>
+
+          <div className="authCard">
+            <h2>Olá, {session.user.email}!</h2>
+            <p>
+              A tua sessão foi iniciada com sucesso.
+              Bem-vindo à comunidade Conecta.
+            </p>
+            <p>Estamos a preparar novas funcionalidades para ti.</p>
+          </div>
+        </section>
+
+        <footer>
+          <span>© 2026 Conecta</span>
+          <span>Feito para aproximar.</span>
+        </footer>
+      </main>
+    );
   }
 
   return (
@@ -67,13 +134,11 @@ export default function Home() {
         <div className="authCard">
           <h2>Entra na comunidade</h2>
           <p>
-            Estamos a preparar o Conecta. Deixa o teu e-mail para receberes um
-            link de acesso de teste.
+            Coloca o teu e-mail para receberes um link de acesso.
           </p>
 
           <form onSubmit={signUp}>
             <label htmlFor="email">O teu endereço de e-mail</label>
-
             <input
               id="email"
               type="email"
@@ -83,8 +148,8 @@ export default function Home() {
               required
             />
 
-            <button type="submit" disabled={loading}>
-              {loading ? "A enviar..." : "Receber link de acesso"}
+            <button type="submit" disabled={sending}>
+              {sending ? "A enviar..." : "Receber link de acesso"}
             </button>
           </form>
 
@@ -95,7 +160,7 @@ export default function Home() {
           )}
 
           <small>
-            Ao continuar, estás a testar uma versão inicial do Conecta.
+            Ao continuar, estás a utilizar a versão inicial do Conecta.
           </small>
         </div>
       </section>
@@ -107,4 +172,5 @@ export default function Home() {
     </main>
   );
 }
+
 
