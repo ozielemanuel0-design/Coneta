@@ -13,27 +13,20 @@ export default function Home() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    async function checkSession() {
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        setMessage(error.message);
-      }
-
-      setSession(data.session);
-      setLoading(false);
-    }
-
-    checkSession();
-
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       setLoading(false);
+
+      if (event === "SIGNED_IN") {
+        setMessage("Acesso realizado com sucesso!");
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function signUp(event: FormEvent<HTMLFormElement>) {
@@ -179,6 +172,3 @@ export default function Home() {
     </main>
   );
 }
-
-
-
